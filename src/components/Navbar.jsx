@@ -34,6 +34,24 @@ const handleChange = (e) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setStatus('Sending...');
+
+  const response = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData),
+  });
+
+  if (response.ok) {
+    setStatus('Message sent!');
+    setFormData({ name: '', phone: '', email: '', company: '' });
+  } else {
+    setStatus('Failed to send');
+  }
+};
+
   return (
     <>
       <header
@@ -290,6 +308,7 @@ const handleChange = (e) => {
   <button
     type="submit"
     className="w-full bg-blue-900 text-white py-2 rounded-md hover:bg-blue-1000 cursor-pointer"
+    onClick={()=> handleSubmit(e)}
   >
     Submit
   </button>
